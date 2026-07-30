@@ -1,4 +1,3 @@
-# vision-classify-cnn
 # Vision Classify CNN
 
 A CNN-powered image classifier for natural scene recognition, wrapped in a simple web app.
