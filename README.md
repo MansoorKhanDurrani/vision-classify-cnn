@@ -16,18 +16,21 @@ Classify natural scene images into 6 categories: **buildings, forest, glacier, m
   - 6 classes, roughly balanced (~2200-2500 images/class train, ~440-550/class test) - no balancing needed
   - Image sizes are mostly 150x150, but not fully consistent (some 150x113, 150x110) - resize step required
   - RGB images
+- Built preprocessing + augmentation pipeline:
+  - Resize to 150x150, normalization (ImageNet stats)
+  - Augmentation (training data only): horizontal flip, rotation, color jitter
+  - Verified: 14,034 training images load correctly via `ImageFolder`, all 6 classes auto-detected
 
 ## Currently working on
 
-- Preprocessing pipeline (resize, normalize) and data augmentation
-- Building and training the first CNN (baseline, just needs to run end to end)
+- Building and training the first CNN (baseline model - Day 1 target is to get it running end to end)
 
 ## Future additions
 
 - Hyperparameter tuning (architecture, learning rate, batch size, regularization)
 - Transfer learning comparison (ResNet or MobileNet vs from-scratch CNN)
 - Proper evaluation (confusion matrix, misclassification analysis)
-- Web app (FastAPI/Flask backend + simple frontend) to serve predictions
+- Web app (Flask backend + simple frontend) to serve predictions
 
 ## How to run
 
