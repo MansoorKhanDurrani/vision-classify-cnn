@@ -20,10 +20,16 @@ Classify natural scene images into 6 categories: **buildings, forest, glacier, m
   - Resize to 150x150, normalization (ImageNet stats)
   - Augmentation (training data only): horizontal flip, rotation, color jitter
   - Verified: 14,034 training images load correctly via `ImageFolder`, all 6 classes auto-detected
+  - Built and trained baseline CNN (3 conv blocks + FC layers):
+  - Trained for 3 epochs on the full training set (14,034 images)
+  - Achieved 83.00% test accuracy - strong baseline before tuning
+  - Model and loss curve saved (`models/baseline_cnn.pth`, `results/baseline_loss.png`)
 
 ## Currently working on
 
 - Building and training the first CNN (baseline model - Day 1 target is to get it running end to end)
+
+- Day 2: hyperparameter tuning, transfer learning comparison (ResNet/MobileNet vs from-scratch CNN), and proper evaluation (confusion matrix, misclassification analysis)
 
 ## Future additions
 
