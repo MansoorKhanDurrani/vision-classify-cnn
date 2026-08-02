@@ -60,32 +60,34 @@ Full confusion matrix: [`results/confusion_matrix_mobilenet.png`](results/confus
 
 ## Project Structure
 
+\```
 vision-classify-cnn/
 │
 ├── app/
-│ ├── app.py # Flask backend - loads model, serves predictions
-│ ├── templates/
-│ │ └── index.html
-│ └── static/
-│ ├── style.css
-│ ├── script.js
-│ └── samples/ # one sample image per class
+│   ├── app.py                  # Flask backend - loads model, serves predictions
+│   ├── templates/
+│   │   └── index.html
+│   └── static/
+│       ├── style.css
+│       ├── script.js
+│       └── samples/             # one sample image per class
 │
-├── data/ # dataset (gitignored - see setup below)
+├── data/                        # dataset (gitignored - see setup below)
 ├── src/
-│ ├── inspect_data.py
-│ ├── preprocess.py # transforms: augmentation + normalization
-│ ├── model.py # from-scratch CNN architecture
-│ ├── train.py # reusable training function
-│ ├── run_experiments.py # hyperparameter tuning experiments
-│ ├── train_transfer.py # MobileNetV2 fine-tuning
-│ └── evaluate.py # confusion matrix + classification report
-├── models/ # saved model weights (.pth)
-├── results/ # loss curves, confusion matrix
+│   ├── inspect_data.py
+│   ├── preprocess.py             # transforms: augmentation + normalization
+│   ├── model.py                  # from-scratch CNN architecture
+│   ├── train.py                  # reusable training function
+│   ├── run_experiments.py        # hyperparameter tuning experiments
+│   ├── train_transfer.py         # MobileNetV2 fine-tuning
+│   └── evaluate.py               # confusion matrix + classification report
+├── models/                       # saved model weights (.pth)
+├── results/                      # loss curves, confusion matrix
 │
 ├── README.md
 ├── requirements.txt
 └── .gitignore
+\```
 
 
 ## How to Run
