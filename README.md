@@ -36,14 +36,28 @@ Classify natural scene images into 6 categories: **buildings, forest, glacier, m
 - Transfer learning (MobileNetV2, frozen feature extractor + fine-tuned classifier):
   - 87.77% test accuracy, val loss 0.334 - beats from-scratch CNN (84.23%)
   - Faster convergence (5 epochs vs 6), more stable loss curves
+  - Proper evaluation (MobileNetV2, best model):
+  - Overall test accuracy: 88% (3000 test images)
+  - Confusion matrix generated - errors are semantically sensible, not random
+  - Weakest class: mountain (75% recall) - confused with glacier 98 times (snowy/rocky terrain overlap)
+  - Other notable confusions: street<->buildings (urban overlap), glacier->sea (blue/icy tone overlap)
 
 ## Currently working on
 
-- Building and training the first CNN (baseline model - Day 1 target is to get it running end to end)
+Day 3: building the Flask backend and simple frontend to serve predictions
 
 - Day 2: hyperparameter tuning, transfer learning comparison (ResNet/MobileNet vs from-scratch CNN), and proper evaluation (confusion matrix, misclassification analysis)
 
 - Proper evaluation (confusion matrix, misclassification analysis) on the best model (MobileNetV2 transfer    learning)
+
+## Results Summary
+
+| Model | Test Accuracy | Notes |
+|---|---|---|
+| From-scratch CNN (tuned) | 84.23% | lr=0.001, epochs=6, dropout=0.3 |
+| **MobileNetV2 (transfer learning)** | **87.77%** | Best model - frozen features, fine-tuned classifier |
+
+Full confusion matrix and per-class metrics in `results/confusion_matrix_mobilenet.png`.
 
 ## Future additions
 
