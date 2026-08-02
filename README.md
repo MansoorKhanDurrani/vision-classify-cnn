@@ -123,5 +123,7 @@ Open `http://127.0.0.1:5000` in your browser.
 ## Author
 
 **Mansoor Khan**
+
 BS Software Engineering Student
+
 Learning Machine Learning and Deep Learning through practical projects.
