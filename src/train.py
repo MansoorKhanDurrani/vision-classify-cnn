@@ -4,18 +4,17 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 import torch
 import torch.nn as nn
 import matplotlib.pyplot as plt
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Subset, random_split
 from torchvision.datasets import ImageFolder
 from model import SceneCNN
-from preprocess import train_transforms, eval_transforms
+from preprocess import train_transforms, train_transforms_no_aug, eval_transforms
 
-from torch.utils.data import DataLoader, random_split
 
-from torch.utils.data import DataLoader, Subset, random_split
+def load_data(batch_size=32, val_split=0.15, use_augmentation=True):
+    train_tf = train_transforms if use_augmentation else train_transforms_no_aug
 
-def load_data(batch_size=32, val_split=0.15):
     # Two datasets pointing to the same folder, different transforms
-    train_dataset_full = ImageFolder("data/seg_train/seg_train", transform=train_transforms)
+    train_dataset_full = ImageFolder("data/seg_train/seg_train", transform=train_tf)
     val_dataset_full = ImageFolder("data/seg_train/seg_train", transform=eval_transforms)
     test_dataset = ImageFolder("data/seg_test/seg_test", transform=eval_transforms)
 
@@ -37,13 +36,13 @@ def load_data(batch_size=32, val_split=0.15):
     return train_loader, val_loader, test_loader
 
 
-def train_model(lr=0.001, epochs=3, dropout=0.0, batch_size=32, run_name="baseline"):
+def train_model(lr=0.001, epochs=3, dropout=0.0, batch_size=32, filters=(16, 32, 64), use_augmentation=True, run_name="baseline"):
     torch.manual_seed(42)
     device = torch.device("cpu")
 
-    train_loader, val_loader, test_loader = load_data(batch_size=batch_size)
+    train_loader, val_loader, test_loader = load_data(batch_size=batch_size, use_augmentation=use_augmentation)
 
-    model = SceneCNN(num_classes=6, dropout=dropout).to(device)
+    model = SceneCNN(num_classes=6, dropout=dropout, filters=filters).to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 
@@ -106,6 +105,7 @@ def train_model(lr=0.001, epochs=3, dropout=0.0, batch_size=32, run_name="baseli
     torch.save(model.state_dict(), f"models/{run_name}.pth")
 
     return train_losses[-1], val_losses[-1], accuracy
+
 
 if __name__ == "__main__":
     train_model(run_name="val_split_test")

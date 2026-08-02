@@ -1,5 +1,6 @@
 import torchvision.transforms as transforms
 
+# Training transforms - includes augmentation
 IMG_SIZE = 150
 
 # Training transforms - includes augmentation
@@ -13,7 +14,15 @@ train_transforms = transforms.Compose([
 ])
 
 # Validation/Test transforms - NO augmentation, just resize + normalize
+# Validation/Test transforms - NO augmentation, just resize + normalize
 eval_transforms = transforms.Compose([
+    transforms.Resize((IMG_SIZE, IMG_SIZE)),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
+
+# No augmentation version - for comparison experiment
+train_transforms_no_aug = transforms.Compose([
     transforms.Resize((IMG_SIZE, IMG_SIZE)),
     transforms.ToTensor(),
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
@@ -27,7 +36,6 @@ if __name__ == "__main__":
     print("Classes:", train_dataset.classes)
     print("Number of training images:", len(train_dataset))
 
-    # Peek at one transformed sample
     img, label = train_dataset[0]
     print("Transformed image shape:", img.shape)
     print("Transformed image dtype:", img.dtype)
