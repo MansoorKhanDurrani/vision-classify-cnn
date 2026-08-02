@@ -1,54 +1,146 @@
-# Vision Classify CNN
+# Vision Classify
 
-A CNN-powered image classifier for natural scene recognition, wrapped in a simple web app.
+A natural scene image classifier powered by a CNN, fine-tuned via transfer learning, and served through an interactive web app. Upload any photo and get an instant prediction across 6 categories: **buildings, forest, glacier, mountain, sea, and street**.
 
-## Goal
+![Status](https://img.shields.io/badge/status-complete-brightgreen)
 
-Classify natural scene images into 6 categories: **buildings, forest, glacier, mountain, sea, street** — using a CNN trained from scratch (and compared against a transfer learning model). The trained model will be served through a small web app where anyone can upload an image and get a prediction with a confidence score.
+## Live Demo
 
-**Dataset:** [Intel Image Classification](https://www.kaggle.com/datasets/puneet6060/intel-image-classification) (Kaggle)
+Upload a photo or try one of the built-in samples — the app returns the predicted scene type with a confidence score in real time.
 
-## Done
+## Project Objective
 
-- Set up repo structure (`data/`, `src/`, `notebooks/`, `results/`, `models/`, `app/`)
-- Downloaded and extracted the Intel Image Classification dataset
-- Inspected the dataset:
-  - 6 classes, roughly balanced (~2200-2500 images/class train, ~440-550/class test) - no balancing needed
-  - Image sizes are mostly 150x150, but not fully consistent (some 150x113, 150x110) - resize step required
-  - RGB images
-- Built preprocessing + augmentation pipeline:
-  - Resize to 150x150, normalization (ImageNet stats)
-  - Augmentation (training data only): horizontal flip, rotation, color jitter
-  - Verified: 14,034 training images load correctly via `ImageFolder`, all 6 classes auto-detected
-  - Built and trained baseline CNN (3 conv blocks + FC layers):
-  - Trained for 3 epochs on the full training set (14,034 images)
-  - Achieved 83.00% test accuracy - strong baseline before tuning
-  - Model and loss curve saved (`models/baseline_cnn.pth`, `results/baseline_loss.png`)
-  - - Hyperparameter tuning (systematic, one variable at a time):
-  - Best config: lr=0.001, epochs=6, dropout=0.3, filters=(16,32,64) - 84.23% test accuracy
-  - lr=0.01 caused training to fail entirely (~random accuracy) - too high
-  - Found and fixed overfitting with dropout (val loss was rising without it)
-  - Tested smaller/larger architectures - default filter sizes remained best
-- Augmentation on/off comparison:
-  - With augmentation: train/val loss gap = 0.02, test acc 84.23%
-  - Without augmentation: train/val loss gap = 0.32, test acc 83.00%
-  - Confirmed augmentation's main benefit is reducing overfitting, not just accuracy
-- Transfer learning (MobileNetV2, frozen feature extractor + fine-tuned classifier):
-  - 87.77% test accuracy, val loss 0.334 - beats from-scratch CNN (84.23%)
-  - Faster convergence (5 epochs vs 6), more stable loss curves
+Build a complete AI-powered image classification system that:
 
-## Currently working on
+- Classifies natural scene images using a Convolutional Neural Network (CNN)
+- Trains and evaluates deep learning models using PyTorch
+- Applies proper data preprocessing and augmentation
+- Compares a from-scratch CNN against a transfer learning model, honestly
+- Deploys the trained model through a Flask web application
+- Provides real-time image predictions with confidence scores
 
-- Building and training the first CNN (baseline model - Day 1 target is to get it running end to end)
-- Day 2: hyperparameter tuning, transfer learning comparison (ResNet/MobileNet vs from-scratch CNN), and proper evaluation (confusion matrix, misclassification analysis)
-- Proper evaluation (confusion matrix, misclassification analysis) on the best model (MobileNetV2 transfer learning)
+## Results
 
-## Future additions
+| Model | Test Accuracy | Notes |
+|---|---|---|
+| From-scratch CNN (tuned) | 84.23% | 3 conv blocks, lr=0.001, epochs=6, dropout=0.3 |
+| **MobileNetV2 (transfer learning)** | **87.77%** | Frozen pretrained features + fine-tuned classifier head — **best model, used in the live app** |
 
-- Web app (Flask backend + simple HTML/CSS/JS frontend) to serve predictions
+**Confusion matrix (best model):** overall 88% accuracy across 3,000 test images. Errors are concentrated in semantically related classes rather than random noise:
+- `mountain` → `glacier` (98 cases) — both feature snowy/rocky terrain
+- `street` → `buildings` (74 cases) — both are urban scenes
+- `glacier` → `sea` (29 cases) — both have blue/icy tones
 
+Full confusion matrix: [`results/confusion_matrix_mobilenet.png`](results/confusion_matrix_mobilenet.png)
 
+## What I Tried and Learned
 
-## How to run
+**Hyperparameter tuning** (one variable at a time):
+- Learning rate 0.01 caused training to fail entirely (~18% accuracy, near-random) — too high
+- Learning rate 0.0001 was too slow to converge in a reasonable number of epochs
+- lr=0.001 was the sweet spot
+- Without dropout, the model started overfitting after ~3-4 epochs (val loss rising while train loss kept falling); dropout=0.3 fixed this
+- Tried smaller (8,16,32) and larger (32,64,128) filter sizes — neither beat the original (16,32,64) architecture, so more capacity wasn't the bottleneck
 
-*(To be filled in once the training pipeline is complete)*
+**Augmentation on vs. off** (same config, only this changed):
+- With augmentation: train/val loss gap = 0.02 → strong generalization, 84.23% accuracy
+- Without augmentation: train/val loss gap = 0.32 → clear overfitting, 83.00% accuracy
+- Takeaway: augmentation's biggest win here was reducing overfitting, not raw accuracy
+
+**Transfer learning vs. from-scratch:**
+- MobileNetV2 (pretrained on ImageNet, feature extractor frozen, only classifier head fine-tuned) beat the from-scratch CNN by ~3.5%, converged faster (5 vs 6 epochs), and generalized better (val loss below train loss)
+- Makes sense: ImageNet pretraining already encodes general visual features (edges, textures, shapes) that transfer directly to natural scene recognition
+
+## Tech Stack
+
+**Deep Learning:** PyTorch, Torchvision, NumPy, Matplotlib, Scikit-learn
+**Backend:** Flask
+**Frontend:** HTML, CSS, JavaScript
+**Version Control:** Git, GitHub (feature-branch workflow: feature branches → `dev` → `main`)
+
+## Project Structure
+
+vision-classify-cnn/
+│
+├── app/
+│ ├── app.py # Flask backend - loads model, serves predictions
+│ ├── templates/
+│ │ └── index.html
+│ └── static/
+│ ├── style.css
+│ ├── script.js
+│ └── samples/ # one sample image per class
+│
+├── data/ # dataset (gitignored - see setup below)
+├── src/
+│ ├── inspect_data.py
+│ ├── preprocess.py # transforms: augmentation + normalization
+│ ├── model.py # from-scratch CNN architecture
+│ ├── train.py # reusable training function
+│ ├── run_experiments.py # hyperparameter tuning experiments
+│ ├── train_transfer.py # MobileNetV2 fine-tuning
+│ └── evaluate.py # confusion matrix + classification report
+├── models/ # saved model weights (.pth)
+├── results/ # loss curves, confusion matrix
+│
+├── README.md
+├── requirements.txt
+└── .gitignore
+
+## How to Run
+
+**1. Clone the repo**
+```bash
+git clone https://github.com/MansoorKhanDurrani/vision-classify-cnn.git
+cd vision-classify-cnn
+```
+
+**2. Install dependencies**
+```bash
+pip install -r requirements.txt
+```
+
+**3. Get the dataset**
+Download the [Intel Image Classification dataset](https://www.kaggle.com/datasets/puneet6060/intel-image-classification) from Kaggle, extract it into `data/`, so you have:
+
+data/seg_train/seg_train/<classes>/
+data/seg_test/seg_test/<classes>/
+
+**4. (Optional) Retrain the model**
+```bash
+python src/train_transfer.py
+```
+This saves the trained model to `models/transfer_mobilenet.pth`, which the app loads.
+
+**5. Run the web app**
+```bash
+python app/app.py
+```
+Open `http://127.0.0.1:5000` in your browser.
+
+## Development Roadmap
+
+- [x] Project Initialization
+- [x] Dataset Collection
+- [x] Data Preprocessing
+- [x] Data Augmentation
+- [x] CNN Architecture Development
+- [x] Model Training
+- [x] Hyperparameter Tuning
+- [x] Model Evaluation
+- [x] Flask Backend Development
+- [x] Frontend Development
+- [x] Final Deployment (local)
+
+## Future Additions
+
+- Deploy publicly (e.g. Hugging Face Spaces) for a shareable live link
+- Grad-CAM heatmaps to visualize what the model is focusing on
+- Handle out-of-scope images ("not confident this is any of my 6 classes")
+- Top-3 predictions with confidence bars, not just the top pick
+
+## Author
+
+**Mansoor Khan**
+BS Software Engineering Student
+Learning Machine Learning and Deep Learning through practical projects.
