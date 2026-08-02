@@ -1,4 +1,4 @@
-# Vision Classify
+# Vision Classify CNN
 
 A natural scene image classifier powered by a CNN, fine-tuned via transfer learning, and served through an interactive web app. Upload any photo and get an instant prediction across 6 categories: **buildings, forest, glacier, mountain, sea, and street**.
 
