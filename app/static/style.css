@@ -1,0 +1,106 @@
+* { box-sizing: border-box; }
+
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 20px;
+}
+
+.container {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+h1 { margin: 0 0 8px; color: #1e3c72; }
+.subtitle { color: #555; font-size: 14px; margin-bottom: 24px; }
+
+.dropzone {
+    border: 2px dashed #2a5298;
+    border-radius: 12px;
+    padding: 30px;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-bottom: 20px;
+}
+.dropzone:hover { background: #f0f4fa; }
+.dropzone.dragover { background: #e0eaff; }
+
+.preview {
+    max-width: 100%;
+    max-height: 220px;
+    border-radius: 8px;
+    margin-top: 12px;
+}
+
+.hidden { display: none; }
+
+.loading {
+    color: #2a5298;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.result {
+    background: #f7f9fc;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+#predictedClass {
+    text-transform: capitalize;
+    color: #1e3c72;
+    margin: 0 0 12px;
+}
+
+.confidence-bar-bg {
+    background: #e0e0e0;
+    border-radius: 8px;
+    height: 14px;
+    overflow: hidden;
+}
+.confidence-bar-fill {
+    background: linear-gradient(90deg, #2a5298, #4caf50);
+    height: 100%;
+    width: 0%;
+    transition: width 0.6s ease;
+}
+#confidenceText { margin-top: 8px; color: #555; font-size: 14px; }
+
+.samples-title { font-size: 14px; color: #555; margin-bottom: 10px; }
+.samples { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.sample-img {
+    width: 60px; height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border 0.2s;
+}
+.sample-img:hover { border: 2px solid #2a5298; }
+.about {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    text-align: left;
+}
+.about h3 {
+    font-size: 14px;
+    color: #1e3c72;
+    margin-bottom: 8px;
+}
+.about p {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.5;
+    margin: 0;
+}

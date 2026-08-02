@@ -1,7 +1,7 @@
 import os
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import torch
 import torch.nn as nn
 from torchvision.models import mobilenet_v2
@@ -53,8 +53,8 @@ def predict():
 
 
 @app.route("/", methods=["GET"])
-def health_check():
-    return jsonify({"status": "API is running", "classes": class_names})
+def index():
+    return render_template("index.html")
 
 
 if __name__ == "__main__":

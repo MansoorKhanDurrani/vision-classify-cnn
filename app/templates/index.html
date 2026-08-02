@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vision Classify - Natural Scene Classifier</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Vision Classify</h1>
+        <p class="subtitle">Upload a photo and I'll tell you if it's a <strong>building, forest, glacier, mountain, sea, or street</strong> scene.</p>
+
+        <div id="dropzone" class="dropzone">
+            <p id="dropzone-text">Drag & drop an image here, or click to choose one</p>
+            <img id="preview" class="preview hidden" />
+            <input type="file" id="fileInput" accept="image/*" hidden>
+        </div>
+
+        <div id="loading" class="loading hidden">Analyzing image...</div>
+
+        <div id="result" class="result hidden">
+            <h2 id="predictedClass"></h2>
+            <div class="confidence-bar-bg">
+                <div id="confidenceBar" class="confidence-bar-fill"></div>
+            </div>
+            <p id="confidenceText"></p>
+        </div>
+
+        <h3 class="samples-title">Or try a sample:</h3>
+        <div class="samples">
+            <img src="{{ url_for('static', filename='samples/buildings.jpg') }}" class="sample-img" data-name="buildings.jpg">
+            <img src="{{ url_for('static', filename='samples/forest.jpg') }}" class="sample-img" data-name="forest.jpg">
+            <img src="{{ url_for('static', filename='samples/glacier.jpg') }}" class="sample-img" data-name="glacier.jpg">
+            <img src="{{ url_for('static', filename='samples/mountain.jpg') }}" class="sample-img" data-name="mountain.jpg">
+            <img src="{{ url_for('static', filename='samples/sea.jpg') }}" class="sample-img" data-name="sea.jpg">
+            <img src="{{ url_for('static', filename='samples/street.jpg') }}" class="sample-img" data-name="street.jpg">
+        </div>
+        <div class="about">
+    <h3>About this project</h3>
+    <p>This tool uses a <strong>CNN (MobileNetV2, transfer learning)</strong> trained on the Intel Image Classification dataset to recognize natural scenes. It achieves <strong>~88% accuracy</strong> across 6 categories: buildings, forest, glacier, mountain, sea, and street.</p>
+</div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
